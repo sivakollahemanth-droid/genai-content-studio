@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GenAI Content Studio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="css/layout.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <link rel="stylesheet" href="css/animations.css" />
+</head>
+<body>
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="logo">
+        <span class="logo-pulse"></span>
+        <span class="logo-text">GenAI<span class="logo-accent">Studio</span></span>
+      </div>
+      <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle sidebar">&#9776;</button>
+    </div>
+
+    <nav class="sidebar-nav">
+      <p class="nav-label">Content Types</p>
+      <button class="nav-item active" data-tool="Blog Post" data-type="blog">
+        <span class="nav-icon icon-purple">✍</span>
+        <span class="nav-text">Blog Post</span>
+      </button>
+      <button class="nav-item" data-tool="Social Media" data-type="social">
+        <span class="nav-icon icon-teal">◈</span>
+        <span class="nav-text">Social Media</span>
+      </button>
+      <button class="nav-item" data-tool="Email Copy" data-type="email">
+        <span class="nav-icon icon-amber">✉</span>
+        <span class="nav-text">Email Copy</span>
+      </button>
+      <button class="nav-item" data-tool="Ad Copy" data-type="ad">
+        <span class="nav-icon icon-coral">▶</span>
+        <span class="nav-text">Ad Copy</span>
+      </button>
+      <button class="nav-item" data-tool="Product Description" data-type="product">
+        <span class="nav-icon icon-pink">◇</span>
+        <span class="nav-text">Product Desc.</span>
+      </button>
+
+      <p class="nav-label" style="margin-top:24px;">Tools</p>
+      <button class="nav-item" data-tool="Rewriter" data-type="blog">
+        <span class="nav-icon icon-purple">↺</span>
+        <span class="nav-text">Rewriter</span>
+      </button>
+      <button class="nav-item" data-tool="Summarizer" data-type="blog">
+        <span class="nav-icon icon-teal">≡</span>
+        <span class="nav-text">Summarizer</span>
+      </button>
+      <button class="nav-item" data-tool="Idea Generator" data-type="blog">
+        <span class="nav-icon icon-amber">✦</span>
+        <span class="nav-text">Idea Generator</span>
+      </button>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="api-status" id="apiStatus">
+        <span class="status-dot"></span>
+        <span class="status-text">API Connected</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main-content" id="mainContent">
+
+    <!-- TOP BAR -->
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="mobile-menu-btn" id="mobileMenuBtn">&#9776;</button>
+        <div class="breadcrumb">
+          <span class="breadcrumb-parent">Studio</span>
+          <span class="breadcrumb-sep">›</span>
+          <span class="breadcrumb-current" id="breadcrumbCurrent">Blog Post</span>
+        </div>
+      </div>
+      <div class="topbar-tabs">
+        <button class="tab active" data-tab="generate">Generate</button>
+        <button class="tab" data-tab="history">History</button>
+        <button class="tab" data-tab="templates">Templates</button>
+        <button class="tab" data-tab="settings">Settings</button>
+      </div>
+      <div class="topbar-right">
+        <button class="icon-btn" id="themeToggle" title="Toggle theme">◑</button>
+        <button class="icon-btn" id="exportBtn" title="Export history">↓</button>
+      </div>
+    </header>
+
+    <!-- ===================== GENERATE TAB ===================== -->
+    <section class="workspace active" id="ws-generate">
+      <div class="workspace-inner">
+
+        <div class="ws-header">
+          <div>
+            <h1 class="ws-title" id="wsTitle">Blog Post Generator</h1>
+            <p class="ws-subtitle" id="wsSubtitle">Craft long-form content with precision and personality.</p>
+          </div>
+          <div class="char-counter" id="charCounter">0 / 500</div>
+        </div>
+
+        <div class="form-grid">
+
+          <!-- LEFT COL: Prompt & Options -->
+          <div class="form-col">
+            <div class="card">
+              <div class="card-section">
+                <label class="field-label" for="mainPrompt">Your Prompt</label>
+                <textarea
+                  id="mainPrompt"
+                  class="studio-textarea"
+                  placeholder="Describe what you want to create... e.g. The future of remote work in 2025 and how companies should adapt."
+                  maxlength="500"
+                ></textarea>
+              </div>
+
+              <div class="card-section card-row">
+                <div class="field-group">
+                  <label class="field-label" for="selTone">Tone</label>
+                  <select class="studio-select" id="selTone">
+                    <option value="professional">Professional</option>
+                    <option value="casual">Casual</option>
+                    <option value="witty">Witty</option>
+                    <option value="inspirational">Inspirational</option>
+                    <option value="educational">Educational</option>
+                    <option value="persuasive">Persuasive</option>
+                    <option value="storytelling">Storytelling</option>
+                  </select>
+                </div>
+                <div class="field-group">
+                  <label class="field-label" for="selLength">Length</label>
+                  <select class="studio-select" id="selLength">
+                    <option value="100">Short (~100 words)</option>
+                    <option value="250" selected>Medium (~250 words)</option>
+                    <option value="500">Long (~500 words)</option>
+                    <option value="800">Extended (~800 words)</option>
+                  </select>
+                </div>
+                <div class="field-group">
+                  <label class="field-label" for="selAudience">Audience</label>
+                  <select class="studio-select" id="selAudience">
+                    <option>General</option>
+                    <option>Professionals</option>
+                    <option>Students</option>
+                    <option>Executives</option>
+                    <option>Consumers</option>
+                    <option>Developers</option>
+                    <option>Marketers</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="card-section">
+                <label class="field-label">Keywords <span class="label-hint">(click to toggle)</span></label>
+                <div class="chip-row" id="keywordChips">
+                  <button class="chip" type="button">AI</button>
+                  <button class="chip" type="button">Automation</button>
+                  <button class="chip" type="button">Productivity</button>
+                  <button class="chip" type="button">Startups</button>
+                  <button class="chip" type="button">Marketing</button>
+                  <button class="chip" type="button">SEO</button>
+                  <button class="chip" type="button">Growth</button>
+                  <button class="chip" type="button">Design</button>
+                  <button class="chip" type="button">Leadership</button>
+                  <button class="chip" type="button">Innovation</button>
+                </div>
+                <div class="custom-keyword-row">
+                  <input type="text" id="customKeyword" class="studio-input" placeholder="Add custom keyword..." />
+                  <button class="add-kw-btn" id="addKeywordBtn">+</button>
+                </div>
+              </div>
+
+              <div class="card-section">
+                <button class="generate-btn" id="generateBtn">
+                  <span class="btn-icon">✦</span>
+                  <span class="btn-label">Generate Content</span>
+                  <span class="btn-spinner" id="btnSpinner"></span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- RIGHT COL: Output -->
+          <div class="form-col">
+            <div class="card output-card" id="outputCard">
+              <div class="output-header">
+                <div class="output-meta">
+                  <span class="output-badge" id="outputBadge">Output</span>
+                  <span class="output-wordcount" id="outputWordcount"></span>
+                </div>
+                <div class="output-actions">
+                  <button class="action-btn" id="copyBtn" title="Copy to clipboard">Copy</button>
+                  <button class="action-btn" id="regenerateBtn" title="Regenerate">↺ Redo</button>
+                  <button class="action-btn save-btn" id="saveBtn" title="Save to history">Save</button>
+                </div>
+              </div>
+              <div class="progress-bar-wrap" id="progressWrap">
+                <div class="progress-bar" id="progressBar"></div>
+              </div>
+              <div class="output-body" id="outputBody">
+                <div class="output-placeholder">
+                  <div class="placeholder-icon">✦</div>
+                  <p>Your generated content will appear here.</p>
+                  <p class="placeholder-hint">Fill in your prompt and click Generate.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== HISTORY TAB ===================== -->
+    <section class="workspace" id="ws-history">
+      <div class="workspace-inner">
+        <div class="ws-header">
+          <div>
+            <h1 class="ws-title">Generation History</h1>
+            <p class="ws-subtitle">Review and reload your past generations.</p>
+          </div>
+          <button class="clear-btn" id="clearHistoryBtn">Clear All</button>
+        </div>
+
+        <div class="stats-row">
+          <div class="stat-card">
+            <div class="stat-value" id="statTotal">0</div>
+            <div class="stat-label">Generated</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="statWords">0</div>
+            <div class="stat-label">Total Words</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="statTypes">0</div>
+            <div class="stat-label">Types Used</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="statSaved">0</div>
+            <div class="stat-label">Saved</div>
+          </div>
+        </div>
+
+        <div class="history-list" id="historyList">
+          <div class="empty-state">
+            <div class="empty-icon">◈</div>
+            <p>No generations yet.</p>
+            <p class="placeholder-hint">Create some content first.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== TEMPLATES TAB ===================== -->
+    <section class="workspace" id="ws-templates">
+      <div class="workspace-inner">
+        <div class="ws-header">
+          <div>
+            <h1 class="ws-title">Templates</h1>
+            <p class="ws-subtitle">Start faster with battle-tested formats.</p>
+          </div>
+        </div>
+
+        <div class="templates-grid" id="templatesGrid">
+          <!-- Injected by JS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== SETTINGS TAB ===================== -->
+    <section class="workspace" id="ws-settings">
+      <div class="workspace-inner">
+        <div class="ws-header">
+          <div>
+            <h1 class="ws-title">Settings</h1>
+            <p class="ws-subtitle">Customize your studio experience.</p>
+          </div>
+        </div>
+
+        <div class="settings-grid">
+          <div class="card settings-card">
+            <h2 class="settings-section-title">Brand Voice</h2>
+            <p class="settings-desc">Define how your brand sounds across all content types.</p>
+            <textarea id="brandVoice" class="studio-textarea" style="min-height:100px;"
+              placeholder="e.g. We are a bold, human-first fintech company. We speak plainly, avoid jargon, and always put the customer first."></textarea>
+          </div>
+
+          <div class="card settings-card">
+            <h2 class="settings-section-title">Generation Defaults</h2>
+            <div class="settings-row">
+              <div class="field-group">
+                <label class="field-label" for="defLang">Default Language</label>
+                <select class="studio-select" id="defLang">
+                  <option>English</option>
+                  <option>Hindi</option>
+                  <option>Spanish</option>
+                  <option>French</option>
+                  <option>German</option>
+                  <option>Portuguese</option>
+                  <option>Japanese</option>
+                </select>
+              </div>
+              <div class="field-group">
+                <label class="field-label" for="defModel">AI Model</label>
+                <select class="studio-select" id="defModel">
+                  <option value="claude-sonnet-4-20250514">Claude Sonnet 4 (Recommended)</option>
+                  <option value="claude-haiku-4-5-20251001">Claude Haiku 4.5 (Fast)</option>
+                </select>
+              </div>
+            </div>
+            <div class="field-group" style="margin-top:16px;">
+              <label class="field-label">Creativity Temperature: <span class="temp-val" id="tempVal">0.7</span></label>
+              <input type="range" min="0" max="100" value="70" id="tempSlider" class="range-slider" />
+              <div class="range-labels"><span>Focused</span><span>Balanced</span><span>Creative</span></div>
+            </div>
+          </div>
+
+          <div class="card settings-card">
+            <h2 class="settings-section-title">API Configuration</h2>
+            <p class="settings-desc">Your Anthropic API key. Stored only in your browser session.</p>
+            <div class="api-key-row">
+              <input type="password" id="apiKeyInput" class="studio-input" placeholder="sk-ant-api03-..." />
+              <button class="action-btn" id="saveApiKey">Save Key</button>
+            </div>
+            <p class="settings-hint" id="apiKeyStatus">No API key set. The app uses a shared proxy by default.</p>
+          </div>
+
+          <div class="card settings-card">
+            <h2 class="settings-section-title">Interface</h2>
+            <div class="toggle-rows">
+              <div class="toggle-row">
+                <div>
+                  <div class="toggle-label">Auto-save generations</div>
+                  <div class="toggle-desc">Automatically add all outputs to history</div>
+                </div>
+                <label class="toggle-switch">
+                  <input type="checkbox" id="autoSave" checked />
+                  <span class="toggle-knob"></span>
+                </label>
+              </div>
+              <div class="toggle-row">
+                <div>
+                  <div class="toggle-label">Show word count</div>
+                  <div class="toggle-desc">Display live word count on output</div>
+                </div>
+                <label class="toggle-switch">
+                  <input type="checkbox" id="showWordCount" checked />
+                  <span class="toggle-knob"></span>
+                </label>
+              </div>
+              <div class="toggle-row">
+                <div>
+                  <div class="toggle-label">Confirm before clearing</div>
+                  <div class="toggle-desc">Ask before wiping history</div>
+                </div>
+                <label class="toggle-switch">
+                  <input type="checkbox" id="confirmClear" checked />
+                  <span class="toggle-knob"></span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <button class="generate-btn" style="max-width:200px;" id="saveSettingsBtn">Save Settings</button>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- TOAST NOTIFICATION -->
+  <div class="toast" id="toast"></div>
+
+  <script src="js/config.js"></script>
+  <script src="js/state.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
